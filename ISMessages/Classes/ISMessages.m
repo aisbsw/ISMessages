@@ -258,6 +258,20 @@ static NSMutableArray* currentAlertArray = nil;
             }
         }
         
+        // ノッチ有り端末の場合はノッチをよけて表示
+        if (_alertPosition == ISAlertPositionTop) {
+            if (@available(iOS 11.0, *)) {
+                UIEdgeInsets safeArea = ([UIApplication sharedApplication].delegate).window.safeAreaInsets;
+                if (safeArea.top > 0 ) {
+                    // ポートレート時はノッチから若干余白をつけて下げる
+                    alertYPosition = safeArea.top + 5.f;
+                } else if (safeArea.left > 0 || safeArea.right > 0) {
+                    // ランドスケープ時は上部角丸に被らないように若干下げる
+                    alertYPosition = 20;
+                }
+            }
+        }
+        
         [UIView animateWithDuration:0.5f
                               delay:0.f
              usingSpringWithDamping:0.7f
